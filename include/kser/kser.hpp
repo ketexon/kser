@@ -85,6 +85,18 @@ namespace kser {
 		return field_opt->get();
 	}
 
+	constexpr bool has_field(auto& s, std::string_view name) {
+		auto [...x] = s;
+		return (... || ([&] {
+			if constexpr (IsField<decltype(x)>) {
+				if (name == x.field_name()) {
+					return true;
+				}
+			}
+			return false;
+		})());
+	}
+
 	template<typename T>
 	constexpr std::optional<T> try_get_value(auto& s, std::string_view name) {
 		auto& [...x] = s;
@@ -280,13 +292,33 @@ namespace kser {
 		})());
 	}
 
-	constexpr void visit_values(auto& s, auto& visitor) {
+	constexpr void visit_name_values(auto& s, auto visitor) {
 		auto& [...x] = s;
 		(... || ([&] {
 			if constexpr (
 				IsField<std::decay_t<decltype(x)>>
 			) {
-				if constexpr(std::same_as<decltype(visitor(x)), bool>) {
+				using result_t = decltype(visitor(x.field_name(), x.value));
+				if constexpr(std::convertible_to<result_t, bool>) {
+					return visitor(x.field_name(), x.value);
+				}
+				else {
+					visitor(x.field_name(), x.value);
+				}
+			}
+			return false;
+		})());
+	}
+
+	constexpr void visit_values(auto& s, auto visitor) {
+		using visitor_t = decltype(visitor);
+		auto& [...x] = s;
+		(... || ([&] {
+			if constexpr (
+				IsField<std::decay_t<decltype(x)>>
+			) {
+				using result_t = decltype(visitor(x.value));
+				if constexpr (std::same_as<result_t, bool>) {
 					return visitor(x.value);
 				}
 				else {

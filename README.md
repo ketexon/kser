@@ -1,16 +1,15 @@
 # KSer
 
-Ketexon's serialization utility
+Ketexon's serialization utility!
 
 - [Introduction](#introduction)
-  - [Motivation](#motivation)
+- [How it works](#how-it-works)
 - [Usage](#usage)
 
 ```c++
 struct Player {
 	kser::NamedField<int, "max_health"> max_health;
 	kser::NamedField<float, "damage"> damage;
-
 	int cur_health;
 };
 
@@ -20,27 +19,46 @@ int main(){
 		10.0f,
 		50,
 	};
-	kser::set_value(player, "max_health", 100);
+
+	std::cout << "Has cur_health: " << kser::has_field(player, "cur_health") << std::endl;
+	// Has cur_health: 0
+
+	std::cout << "Has max_health: " << kser::has_field(player, "max_health") << std::endl;
+	// Has cur_health: 1
+
+	kser::set_value(player, "max_health", 120);
+	std::cout << "Max Health: " << player.max_health.value << std::endl;
+	// Max Health: 120
+
 	using variant_t = std::variant<int, float>;
 	auto fields = kser::get_value_map<std::map<std::string_view, variant_t>>(player);
-	for(auto& [k, v] : fields) {
-		std::cout << k << ": ";
-		std::visit([](auto&& arg) {
-			std::cout << arg << std::endl;
-		}, v);
-	}
+
+	std::cout << "Damage: " << std::get<float>(fields["damage"]) << std::endl;
+	// Damage: 10
+
+	std::cout << kser::serialize_json(player) << std::endl;
+	// {"max_health": 120, "damage": 10.00}
+
 	return 0;
 }
 ```
 
 ## Introduction
 
-This is a proof of concept for basic reflection using these c++ features:
+KSer is a compile-time reflection utility that allows you to inspect types of
+structures, tag them with no-overhead names, and serialize them.
+
+You could use this library to serialize *arbitrary* structs with very little overhead
+and no need to manually write serialization functions. Think of this as a proof
+of concept way to annotate fields (like Unity's `[SerializeField]`) and an implementation of serialization on top
+of that.
+
+## How it works
+
+This is a proof of concept for basic reflection using these C++ features:
 - strings in templates arguments
 - structured binding pack
 - folding over lambdas
-
-### Motivation
 
 C++17's introduced [structured bindings](https://en.cppreference.com/w/cpp/language/structured_binding):
 

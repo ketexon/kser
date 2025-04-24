@@ -11,6 +11,7 @@ FetchContent_MakeAvailable(KTest)
 add_executable(
 	KSerTest
 	main.cpp
+	serialize.cpp
 )
 
 target_link_libraries(

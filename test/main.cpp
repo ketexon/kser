@@ -12,6 +12,11 @@ struct S {
 	kser::NamedField<std::string, "b"> b{"hello"};
 };
 
+TEST_CASE("Same size as underlying", test_same_size) {
+	kser::NamedField<int, "a"> a;
+	test.AssertEq(sizeof(int), sizeof(a), "int has same size as NamedField<int>");
+}
+
 TEST_CASE("Field concepts", test_field_concepts) {
 	bool v;
 

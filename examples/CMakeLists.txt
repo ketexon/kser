@@ -1,15 +1,26 @@
 add_executable(
-	KSerExample
-	main.cpp
+	KSerExampleReflection
+	reflection.cpp
+)
+
+add_executable(
+	KSerExampleSerialization
+	serialization.cpp
 )
 
 target_link_libraries(
-	KSerExample
+	KSerExampleReflection
+	KSer
+)
+
+target_link_libraries(
+	KSerExampleSerialization
 	KSer
 )
 
 set_target_properties(
-	KSerExample
+	KSerExampleSerialization
+	KSerExampleReflection
 	PROPERTIES
 		CXX_STANDARD 26
 		CXX_STANDARD_REQUIRED YES
