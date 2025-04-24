@@ -2,6 +2,10 @@
 
 Ketexon's serialization utility
 
+- [Introduction](#introduction)
+  - [Motivation](#motivation)
+- [Usage](#usage)
+
 ## Introduction
 
 This is a proof of concept for basic reflection using these c++ features:
