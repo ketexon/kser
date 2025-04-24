@@ -6,6 +6,33 @@ Ketexon's serialization utility
   - [Motivation](#motivation)
 - [Usage](#usage)
 
+```c++
+struct Player {
+	kser::NamedField<int, "max_health"> max_health;
+	kser::NamedField<float, "damage"> damage;
+
+	int cur_health;
+};
+
+int main(){
+	Player player {
+		100,
+		10.0f,
+		50,
+	};
+	kser::set_value(player, "max_health", 100);
+	using variant_t = std::variant<int, float>;
+	auto fields = kser::get_value_map<std::map<std::string_view, variant_t>>(player);
+	for(auto& [k, v] : fields) {
+		std::cout << k << ": ";
+		std::visit([](auto&& arg) {
+			std::cout << arg << std::endl;
+		}, v);
+	}
+	return 0;
+}
+```
+
 ## Introduction
 
 This is a proof of concept for basic reflection using these c++ features:

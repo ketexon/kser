@@ -9,7 +9,7 @@ struct MyStruct {
 	float cur_health;
 };
 
-int main(){
+int main2(){
 	MyStruct s {
 		21, 		// age
 		"Aubrey", 	// name
