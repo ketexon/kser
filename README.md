@@ -181,6 +181,32 @@ struct StaticString {
 
 ## Usage
 
+This project is header only. However, the `kser/serialization.hpp` headers
+refers to the `kser/kser.hpp` via `#include <kser/kser.hpp>`, so if you want to
+manually copy the headers, take that into account.
+
+You can also use this as a CMake submodule via FetchContent:
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+	kser
+	GIT_REPOSITORY https://github.com/ketexon/kser
+	GIT_TAG main
+)
+# FetchContent_Declare(
+# 	kser
+# 	URL https://github.com/ketexon/kser/archive/heads/main.zip
+# )
+FetchContent_MakeAvailable(kser)
+
+target_link_libraries(
+	MyTarget
+	PUBLIC
+	kser
+)
+```
+
 See examples.
 
 ```c++
