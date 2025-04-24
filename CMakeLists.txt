@@ -4,8 +4,10 @@ project(KSer)
 
 if(PROJECT_IS_TOP_LEVEL)
 	option(KSER_BUILD_TESTS "Build tests" ON)
+	option(KSER_BUILD_EXAMPLES "Build examples" ON)
 else()
 	option(KSER_BUILD_TESTS "Build tests" OFF)
+	option(KSER_BUILD_EXAMPLES "Build examples" OFF)
 endif()
 
 add_library(
@@ -29,4 +31,8 @@ set_target_properties(
 
 if(KSER_BUILD_TESTS)
 	add_subdirectory(test)
+endif()
+
+if(KSER_BUILD_EXAMPLES)
+	add_subdirectory(examples)
 endif()
